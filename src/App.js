@@ -1,52 +1,53 @@
-import React, { useEffect, useState } from "react";
-import TaskForm from "./components/TaskForm";
-import TaskList from "./components/TaskList";
-import "./App.css";
+import React, { useEffect, useState } from 'react';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
+import './App.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const api = "https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks"; // Replace with your endpoint
-
-  useEffect(() => {
-    fetch(api)
-      .then((res) => res.json())
-      .then((data) => setTasks(data))
-      .catch((err) => console.error(err));
-  }, []);
+  const fetchTasks = async () => {
+    const response = await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks');
+    const data = await response.json();
+    setTasks(data);
+  };
 
   const addTask = async (task) => {
-    const res = await fetch(api, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ task }),
+    const response = await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task),
     });
-    const newTask = await res.json();
+    const newTask = await response.json();
     setTasks([...tasks, newTask]);
   };
 
+  const updateTask = async (updatedTask) => {
+    await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedTask),
+    });
+    fetchTasks();
+  };
+
   const deleteTask = async (id) => {
-    await fetch(api, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+    await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    setTasks(tasks.filter((task) => task.id !== id));
+    fetchTasks();
   };
 
-  const updateTask = async (id, newTask) => {
-    await fetch(api, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, task: newTask }),
-    });
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, task: newTask } : task)));
-  };
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   return (
-    <div className="app-container">
+    <div className="app">
       <h1>📝 My To-Do List</h1>
-      <TaskForm onAdd={addTask} />
+      <TaskForm addTask={addTask} />
       <TaskList tasks={tasks} onDelete={deleteTask} onUpdate={updateTask} />
     </div>
   );

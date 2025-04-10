@@ -1,27 +1,23 @@
 .task-form {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-.task-form input {
-  flex: 1;
+.task-form input[type="text"],
+.task-form input[type="datetime-local"] {
   padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .task-form button {
-  padding: 10px 15px;
-  font-size: 16px;
-  background-color: #5b21b6;
+  background-color: #6c47ff;
   color: white;
   border: none;
-  border-radius: 6px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-}
-
-.task-form button:hover {
-  background-color: #4c1d95;
 }

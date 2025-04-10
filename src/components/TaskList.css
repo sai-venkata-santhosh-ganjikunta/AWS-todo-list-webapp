@@ -1,33 +1,32 @@
 .task-list {
-  list-style: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.task-list li {
-  background: #f9f9f9;
-  border: 1px solid #e5e5e5;
-  margin-bottom: 10px;
-  padding: 12px 16px;
-  border-radius: 8px;
+.task-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #f4f4f4;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 1rem;
 }
 
-.task-list li input {
-  padding: 6px;
-  font-size: 14px;
-  margin-right: 10px;
+.task-text {
+  font-weight: 500;
 }
 
-.task-list li button {
-  margin-left: 5px;
-  font-size: 16px;
+.task-deadline {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.task-buttons button {
   background: none;
   border: none;
+  font-size: 1.1rem;
   cursor: pointer;
-}
-
-.task-list li button:hover {
-  color: #5b21b6;
+  margin-left: 10px;
 }

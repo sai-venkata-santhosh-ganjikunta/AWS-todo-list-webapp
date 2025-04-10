@@ -1,46 +1,60 @@
-import React, { useState } from "react";
-import "./TaskList.css";
+import React, { useState } from 'react';
+import './TaskList.css';
 
-function TaskList({ tasks, onDelete, onUpdate }) {
+const TaskList = ({ tasks, onDelete, onUpdate }) => {
   const [editingId, setEditingId] = useState(null);
-  const [editText, setEditText] = useState("");
+  const [editedTask, setEditedTask] = useState('');
+  const [editedDeadline, setEditedDeadline] = useState('');
 
   const handleEdit = (task) => {
     setEditingId(task.id);
-    setEditText(task.task);
+    setEditedTask(task.task);
+    setEditedDeadline(task.deadline);
   };
 
-  const handleUpdate = () => {
-    onUpdate(editingId, editText);
+  const saveEdit = (id) => {
+    onUpdate({ id, task: editedTask, deadline: editedDeadline });
     setEditingId(null);
-    setEditText("");
+  };
+
+  const getTimeLeft = (deadline) => {
+    if (!deadline) return 'No deadline';
+    const diff = new Date(deadline) - new Date();
+    if (diff < 0) return 'Expired';
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    return `${days}d ${hours}h ${minutes}m left`;
   };
 
   return (
-    <ul className="task-list">
-      {tasks.map((task) => (
-        <li key={task.id}>
-          {editingId === task.id ? (
+    <div className="task-list">
+      {tasks.map((taskObj) => (
+        <div key={taskObj.id} className="task-card">
+          {editingId === taskObj.id ? (
             <>
+              <input value={editedTask} onChange={(e) => setEditedTask(e.target.value)} />
               <input
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
+                type="datetime-local"
+                value={editedDeadline}
+                onChange={(e) => setEditedDeadline(e.target.value)}
               />
-              <button onClick={handleUpdate}>💾 Save</button>
+              <button onClick={() => saveEdit(taskObj.id)}>💾</button>
             </>
           ) : (
             <>
-              <span>{task.task}</span>
-              <div>
-                <button onClick={() => handleEdit(task)}>✏️</button>
-                <button onClick={() => onDelete(task.id)}>🗑️</button>
+              <div className="task-text">{taskObj.task}</div>
+              <div className="task-deadline">{getTimeLeft(taskObj.deadline)}</div>
+              <div className="task-buttons">
+                <button onClick={() => handleEdit(taskObj)}>✏️</button>
+                <button onClick={() => onDelete(taskObj.id)}>🗑️</button>
               </div>
             </>
           )}
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
-}
+};
 
 export default TaskList;
