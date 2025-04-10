@@ -7,14 +7,21 @@
 .task-form input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
 }
 
 .task-form button {
   padding: 10px 15px;
-  background-color: #1e88e5;
+  font-size: 16px;
+  background-color: #5b21b6;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.task-form button:hover {
+  background-color: #4c1d95;
 }

@@ -1,62 +1,46 @@
-import React, { useState } from 'react';
-import './TaskList.css';
+import React, { useState } from "react";
+import "./TaskList.css";
 
-const TaskList = ({ tasks, onDelete, onUpdate }) => {
-  const [editId, setEditId] = useState(null);
-  const [editedTask, setEditedTask] = useState('');
+function TaskList({ tasks, onDelete, onUpdate }) {
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
 
   const handleEdit = (task) => {
-    setEditId(task.id);
-    setEditedTask(task.task);
+    setEditingId(task.id);
+    setEditText(task.task);
   };
 
-  const handleUpdate = async () => {
-    const res = await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: editId, task: editedTask })
-    });
-
-    if (res.ok) {
-      onUpdate(editId, editedTask);
-      setEditId(null);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const res = await fetch('https://13y1o9ubkk.execute-api.ap-south-1.amazonaws.com/prod/tasks', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
-    });
-
-    if (res.ok) onDelete(id);
+  const handleUpdate = () => {
+    onUpdate(editingId, editText);
+    setEditingId(null);
+    setEditText("");
   };
 
   return (
     <ul className="task-list">
       {tasks.map((task) => (
         <li key={task.id}>
-          {editId === task.id ? (
+          {editingId === task.id ? (
             <>
               <input
-                value={editedTask}
-                onChange={(e) => setEditedTask(e.target.value)}
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
               />
-              <button onClick={handleUpdate}>Save</button>
-              <button onClick={() => setEditId(null)}>Cancel</button>
+              <button onClick={handleUpdate}>💾 Save</button>
             </>
           ) : (
             <>
               <span>{task.task}</span>
-              <button onClick={() => handleEdit(task)}>Edit</button>
-              <button onClick={() => handleDelete(task.id)}>Delete</button>
+              <div>
+                <button onClick={() => handleEdit(task)}>✏️</button>
+                <button onClick={() => onDelete(task.id)}>🗑️</button>
+              </div>
             </>
           )}
         </li>
       ))}
     </ul>
   );
-};
+}
 
 export default TaskList;
